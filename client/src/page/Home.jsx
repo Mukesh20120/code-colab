@@ -3,8 +3,8 @@ import { Link } from "react-router";
 
 function Home() {
   return (
-    <div class="container text-center vw-100 vh-100 d-flex justify-content-center align-items-center text-white">
-      <div class="border border-3 border-warning h-50 w-50 rounded-3 d-flex flex-column justify-content-center align-items-center bg-dark ">
+    <div class=" border border-3  rounded-3 border-warning text-center vw-100 vh-100 d-flex justify-content-center align-items-center text-white">
+      <div class=" d-flex flex-column justify-content-center align-items-center bg-dark p-10 ">
         <div>
           <h1 className="text-white font-bold mb-3">Code Colab</h1>
         </div>
