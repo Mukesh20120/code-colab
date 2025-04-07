@@ -1,0 +1,22 @@
+setup react project
+npm create vite@latest
+-choose the options and you done
+done :)
+
+install bootstrap
+npm install bootstrap
+put the "import 'bootstrap/dist/css/bootstrap.min.css';" in main.js
+done :)
+
+router setup
+npm i react-router
+see doc to setup
+
+npm install
+-codemirror
+-bootstrap
+-react-avtar
+-react-hot-toast
+-react-router
+-socket.io-client
+-uuid
