@@ -1,14 +1,12 @@
-import React from 'react'
+import React from "react";
+import { Outlet } from "react-router";
 
 function App() {
   return (
-    <div>
-      <div class="container py-4 px-3 mx-auto">
-      <h1>Hello, Bootstrap and Vite!</h1>
-      <button class="btn btn-primary">Primary button</button>
-    </div>
-    </div>
-  )
+    <>
+      <Outlet />
+    </>
+  );
 }
 
-export default App
+export default App;
