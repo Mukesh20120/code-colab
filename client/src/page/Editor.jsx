@@ -10,11 +10,7 @@ function Editor() {
   const navigate = useNavigate();
   const { roomId } = useParams();
   const location = useLocation();
-  const [members, setMembers] = useState([
-    { socketId: "1", username: "User1" },
-    { socketId: "2", username: "User2" },
-    { socketId: "3", username: "User3" },
-  ]);
+  const [members, setMembers] = useState([]);
   const newSocket = useCallback(() => {
     return Socket();
   }, []);
@@ -38,18 +34,32 @@ function Editor() {
         if (username !== location.state?.username) {
           toast.success(`${username} joined the room`);
         }
+        console.log(clients, "inside joined event");
         setMembers(clients);
       });
-      socketRef.current.on("disconnected", ({ socketId, username }) => {
+      socketRef.current.on("leave-room", ({ socketId, username }) => {
         toast.success(`${username} left the room`);
+        console.log(socketId, "inside leave-room event");
         setMembers((prev) => {
-          return prev.filter((member) => member.socketId !== socketId);
+          const arr = prev.filter((member) =>{
+            console.log(member,'inside filter');
+            return member.socketId !== socketId;
+          });
+          
+          return arr;
         });
       });
     };
     init();
-  }, []);
 
+
+    return () => {
+      socketRef.current && socketRef.current.disconnect();
+      socketRef.current.off('joined');
+      socketRef.current.off('disconnect');
+    };
+  }, []);
+  console.log(roomId)
   return (
     <div class="row w-100 m-0">
       <div class="col-2 bg-dark vh-100 d-flex flex-column  align-items-center">
@@ -77,13 +87,20 @@ function Editor() {
               type="button"
               class="btn btn-success mt-3 mb-2"
               style={{ width: "80%" }}
-            >
+             onClick={()=>{
+              navigator.clipboard.writeText(roomId);
+              toast.success("Room ID copied to clipboard");
+             }}
+          >
               Create Room
             </button>
             <button
               type="button"
               class="btn btn-danger"
               style={{ width: "80%" }}
+              onClick={() => {
+                navigate("/");
+              }}
             >
               Leave Room
             </button>

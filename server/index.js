@@ -27,7 +27,7 @@ const io = new Server(server, {
 
 const getAllConnectiedClients = (roomId) => {
   return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
-    (sockerId) => ({ sockerId, username: useSocketHashMap[sockerId] })
+    (socketId) =>({socketId, username: useSocketHashMap[socketId]})
   );
 };
 
@@ -37,16 +37,16 @@ io.on("connection", (socket) => {
     useSocketHashMap[socket.id] = username;
     socket.join(roomId);
     const clients = getAllConnectiedClients(roomId);
-    console.log(clients);
-    clients.forEach(({sockerId})=>{
-        io.to(sockerId).emit('joined', {clients, username, socketId: socket.id});
+    clients.forEach(({socketId})=>{
+        io.to(socketId).emit('joined', {clients, username, socketId: socket.id});
     });
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnecting", () => {
+    console.log("disconnecting", socket.id);
     const rooms = [...socket.rooms];
     rooms.forEach((roomId) => {
-        socket.in(roomId).emit("disconnected", {
+        socket.in(roomId).emit("leave-room", {
             socketId: socket.id,
             username: useSocketHashMap[socket.id],
         });
