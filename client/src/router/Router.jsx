@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router";
 import App from "../App";
 import Home from "../page/Home";
 import Editor from "../page/Editor";
+import PageNotFound from "../component/PageNotFound";
 
 const Router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const Router = createBrowserRouter([
       { path: "/editor/:id", element: <Editor /> },
     ],
   },
+  {
+    path: "*",
+    element: <PageNotFound/>,
+  }
 ]);
 
 export default Router;
