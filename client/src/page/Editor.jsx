@@ -6,6 +6,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { toast } from "react-hot-toast";
 
 function Editor() {
+  const codeRef = useRef(null);
   const socketRef = useRef(null);
   const navigate = useNavigate();
   const { roomId } = useParams();
@@ -34,15 +35,20 @@ function Editor() {
         if (username !== location.state?.username) {
           toast.success(`${username} joined the room`);
         }
-        console.log(clients, "inside joined event");
+      
+        setTimeout(()=>{
+          if(socketRef.current.id != socketId){
+            socketRef.current.emit('sync-code',{code: codeRef.current, socketId});
+          }
+        },[500])
         setMembers(clients);
       });
       socketRef.current.on("leave-room", ({ socketId, username }) => {
         toast.success(`${username} left the room`);
-        console.log(socketId, "inside leave-room event");
+        
         setMembers((prev) => {
           const arr = prev.filter((member) =>{
-            console.log(member,'inside filter');
+          
             return member.socketId !== socketId;
           });
           
@@ -59,7 +65,7 @@ function Editor() {
       socketRef.current.off('disconnect');
     };
   }, []);
-  console.log(roomId)
+
   return (
     <div class="row w-100 m-0">
       <div class="col-2 bg-dark vh-100 d-flex flex-column  align-items-center">
@@ -110,7 +116,7 @@ function Editor() {
 
       <div class="col-10 vh-100 d-flex flex-column justify-content-center align-items-center">
         <div class="vh-100" style={{ width: "100%" }}>
-          <CodeEditor />
+          <CodeEditor socketRef={socketRef} roomId={roomId} codeRef={codeRef}/>
         </div>
       </div>
     </div>

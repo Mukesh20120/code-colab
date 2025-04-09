@@ -32,7 +32,6 @@ const getAllConnectiedClients = (roomId) => {
 };
 
 io.on("connection", (socket) => {
-  //   console.log("a new client connected", socket.id);
   socket.on("join", ({ roomId, username }) => {
     useSocketHashMap[socket.id] = username;
     socket.join(roomId);
@@ -42,8 +41,16 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on(('code-change'),({roomId,code})=>{
+     socket.in(roomId).emit('code-change', {code});
+  });
+
+  socket.on(('sync-code'),({code,socketId})=>{
+    io.to(socketId).emit('code-change',{code});
+  })
+
   socket.on("disconnecting", () => {
-    console.log("disconnecting", socket.id);
+ 
     const rooms = [...socket.rooms];
     rooms.forEach((roomId) => {
         socket.in(roomId).emit("leave-room", {
