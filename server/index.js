@@ -2,6 +2,7 @@ const express = require("express");
 const { Server } = require("socket.io");
 const http = require("http");
 const cors = require("cors");
+const path = require('path');
 
 const app = express();
 app.use(express.json());
@@ -13,7 +14,7 @@ app.use(
     credentials: true,
   })
 );
-app.get("/", (req, res) => {
+app.get("/check-server", (req, res) => {
   res.send("Hello from server");
 });
 const server = http.createServer(app);
@@ -63,6 +64,10 @@ io.on("connection", (socket) => {
     });
 });
 
+app.use(express.static(path.join(__dirname, '../client/dist')));
+app.get('/{*any}', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client','dist','index.html'));
+})
 server.listen(5000, () => {
   console.log("running on port 5000 ...");
 });
