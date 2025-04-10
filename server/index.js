@@ -3,6 +3,9 @@ const { Server } = require("socket.io");
 const http = require("http");
 const cors = require("cors");
 const path = require('path');
+require('dotenv').config();
+
+const port = process.env.PORT || 443;
 
 const app = express();
 app.use(express.json());
@@ -68,6 +71,6 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 app.get('/{*any}', (req, res) => {
   res.sendFile(path.join(__dirname, '../client','dist','index.html'));
 })
-server.listen(5000, () => {
-  console.log("running on port 5000 ...");
+server.listen(port, () => {
+  console.log(`running on port ${port}...`);
 });
